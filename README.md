@@ -2,6 +2,8 @@
 
 Boot task to deploy artifacts to Amazon's Elastic Beanstalk.
 
+[![Clojars Project][1]][2]
+
 ## Options
 
 To see a list of options accepted by this task:
@@ -66,3 +68,6 @@ Copyright © 2014 Adzerk
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
+
+[1]: http://clojars.org/adzerk/boot-beanstalk/latest-version.svg
+[2]: http://clojars.org/adzerk/boot-beanstalk
