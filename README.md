@@ -2,9 +2,17 @@
 
 Boot task to deploy artifacts to Amazon's Elastic Beanstalk.
 
-## Example Usage
+## Options
 
-Sample `build.boot`:
+To see a list of options accepted by this task:
+
+```
+$ boot beanstalk -h
+```
+
+## Usage
+
+Sample `build.boot` (deploys a ring app war file to Elastic Beanstalk):
 
 ```clojure
 (set-env!
@@ -37,7 +45,7 @@ $ boot build
 Finally create or update Elastic Beanstalk environments for the application:
 
 ```
-$ boot beanstalk -f target/project.war -e development
+$ boot beanstalk -f target/project.war -de development
 ```
 
 Or get info about deployed environments for the application:
@@ -49,7 +57,7 @@ $ boot beanstalk -i
 Or info about a specific environment:
 
 ```
-$ boot beanstalk -i -e development
+$ boot beanstalk -ie development
 ```
 
 ## License
