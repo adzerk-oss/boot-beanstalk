@@ -1,36 +1,60 @@
 # boot-beanstalk
 
-FIXME: description
+Boot task to deploy artifacts to Amazon's Elastic Beanstalk.
 
-## Installation
+## Example Usage
 
-Download from http://example.com/FIXME.
+Sample `build.boot`:
 
-## Usage
+```clojure
+(set-env!
+  :src-paths #{"src"}
+  :dependencies '[[adzerk/boot-beanstalk "X.Y.Z"]])
 
-FIXME: explanation
+(require '[adzerk.boot-beanstalk :refer [beanstalk]])
 
-    $ java -jar boot-beanstalk-0.1.0-standalone.jar [args]
+(task-options!
+  web       [:serve       'my-application.core/handler]
+  beanstalk [:name        "my-application"
+             :version     "0.1.0-SNAPSHOT"
+             :description "My awesome application"
+             :stack-name  "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7"
+             :access-key  (System/getenv "AWS_ACCESS_KEY")
+             :secret-key  (System/getenv "AWS_SECRET_KEY")])
+  
+(deftask build
+  "Build my application war file."
+  []
+  (comp (add-src) (web) (uber) (war)))
+```
 
-## Options
+Then build the war file:
 
-FIXME: listing of options this app accepts.
+```
+$ boot build
+```
 
-## Examples
+Finally create or update Elastic Beanstalk environments for the application:
 
-...
+```
+$ boot beanstalk -f target/project.war -e development
+```
 
-### Bugs
+Or get info about deployed environments for the application:
 
-...
+```
+$ boot beanstalk -i
+```
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+Or info about a specific environment:
+
+```
+$ boot beanstalk -i -e development
+```
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Adzerk
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
