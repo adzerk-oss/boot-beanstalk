@@ -18,8 +18,10 @@ Sample `build.boot` (deploys a ring app war file to Elastic Beanstalk):
 
 ```clojure
 (set-env!
-  :src-paths #{"src"}
-  :dependencies '[[adzerk/boot-beanstalk "X.Y.Z"]])
+  :tgt-path     "target"
+  :src-paths    #{"src"}
+  :dependencies '[[org.clojure/clojure "1.6.0"]
+                  [adzerk/boot-beanstalk "X.Y.Z"]])
 
 (require '[adzerk.boot-beanstalk :refer [beanstalk]])
 
@@ -33,7 +35,7 @@ Sample `build.boot` (deploys a ring app war file to Elastic Beanstalk):
              :secret-key  (System/getenv "AWS_SECRET_KEY")])
   
 (deftask build
-  "Build my application war file."
+  "Build my application uberwar file."
   []
   (comp (add-src) (web) (uber) (war)))
 ```
