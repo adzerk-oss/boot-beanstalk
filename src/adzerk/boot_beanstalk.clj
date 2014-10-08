@@ -24,7 +24,8 @@
   
   (if-not (or clean deploy info terminate list-stacks)
     (beanstalk :help true)
-    (let [p (-> (boot/get-env) (update-in [:dependencies] conj bs-dep)
+    (let [p (-> (boot/get-env)
+              (update-in [:dependencies] conj bs-dep)
               pod/make-pod
               future)]
       (boot/with-pre-wrap
