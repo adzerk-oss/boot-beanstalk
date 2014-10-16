@@ -48,14 +48,14 @@ file to run in Tomcat or a docker image):
   "Deploy application war file to AWS EB environment."
   []
   (task-options!
-    :stack-name "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7")
+    beanstalk [:stack-name "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7"])
   identity)
   
 (deftask deploy-docker
   "Deploy application docker zip file to AWS EB environment."
   []
   (task-options!
-    :stack-name "64bit Amazon Linux 2014.09 v1.0.9 running Docker 1.2.0")
+    beanstalk [:stack-name "64bit Amazon Linux 2014.09 v1.0.9 running Docker 1.2.0"])
   identity)
 ```
 
