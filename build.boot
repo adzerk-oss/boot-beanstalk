@@ -1,5 +1,8 @@
 (set-env!
   :src-paths    #{"src"}
+  :repositories #(conj % ["deploy" {:url      "https://clojars.org/repo"
+                                    :username (System/getenv "CLOJARS_USER")
+                                    :password (System/getenv "CLOJARS_PASS")}])
   :dependencies '[[org.clojure/clojure "1.6.0"      :scope "provided"]
                   [boot/core           "2.0.0-pre5" :scope "provided"]
                   [lein-beanstalk      "0.2.7"      :scope "test"]])
