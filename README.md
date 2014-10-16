@@ -84,6 +84,11 @@ $ boot deploy-tomcat beanstalk -f target/project.war -de development
 
 #### Docker
 
+**Note:** Your application will need to have a [Dockerfile][3] to build
+the docker image. Also make sure that all the files you want to include
+in the image are being tracked by `git`. Tracked files in the project
+directory will be included in the zip file and uploaded to S3.
+
 Build the docker zip file:
 
 ```
@@ -105,3 +110,4 @@ your option) any later version.
 
 [1]: http://clojars.org/adzerk/boot-beanstalk/latest-version.svg
 [2]: http://clojars.org/adzerk/boot-beanstalk
+[3]: https://docs.docker.com/reference/builder/
