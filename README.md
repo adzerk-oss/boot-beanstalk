@@ -24,7 +24,7 @@ file to run in Tomcat or a docker image):
   :dependencies '[[org.clojure/clojure "1.6.0"]
                   [adzerk/boot-beanstalk "X.Y.Z"]])
 
-(require '[adzerk.boot-beanstalk :refer [beanstalk]])
+(require '[adzerk.boot-beanstalk :refer [beanstalk dockerrun]])
 
 (task-options!
   web       [:serve       'my-application.core/handler]
