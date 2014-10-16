@@ -14,7 +14,8 @@ $ boot beanstalk -h
 
 ## Usage
 
-Sample `build.boot` (deploys a ring app war file to Elastic Beanstalk):
+Sample `build.boot` (deploys a ring app to Elastic Beanstalk as either a war
+file to run in Tomcat or a docker image):
 
 ```clojure
 (set-env!
@@ -30,38 +31,69 @@ Sample `build.boot` (deploys a ring app war file to Elastic Beanstalk):
   beanstalk [:name        "my-application"
              :version     "0.1.0-SNAPSHOT"
              :description "My awesome application"
-             :stack-name  "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7"
              :access-key  (System/getenv "AWS_ACCESS_KEY")
              :secret-key  (System/getenv "AWS_SECRET_KEY")])
   
-(deftask build
+(deftask build-tomcat
   "Build my application uberwar file."
   []
   (comp (add-src) (web) (uber) (war)))
+
+(deftask build-docker
+  "Build my application docker zip file."
+  []
+  (comp (add-repo) (dockerrun) (zip)))
+  
+(deftask deploy-tomcat
+  "Deploy application war file to AWS EB environment."
+  []
+  (task-options!
+    :stack-name "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7")
+  identity)
+  
+(deftask deploy-docker
+  "Deploy application docker zip file to AWS EB environment."
+  []
+  (task-options!
+    :stack-name "64bit Amazon Linux 2014.09 v1.0.9 running Docker 1.2.0")
+  identity)
 ```
 
-Then build the war file:
+The `:stack-name` option may need to be updated, as Amazon changes those all the
+time. You can see a list of available "solution stacks" by doing:
 
 ```
-$ boot build
+$ boot beanstalk -l
 ```
 
-Finally create or update Elastic Beanstalk environments for the application:
+Let's build and deploy the application!
+
+#### Tomcat
+
+Build the war file:
 
 ```
-$ boot beanstalk -f target/project.war -de development
+$ boot build-tomcat
 ```
 
-Or get info about deployed environments for the application:
+and create or update Elastic Beanstalk environment:
 
 ```
-$ boot beanstalk -i
+$ boot deploy-tomcat beanstalk -f target/project.war -de development
 ```
 
-Or info about a specific environment:
+#### Docker
+
+Build the docker zip file:
 
 ```
-$ boot beanstalk -ie development
+$ boot build-docker
+```
+
+and create or update Elastic Beanstalk environment:
+
+```
+$ boot deploy-docker beanstalk -f target/project.zip -de development
 ```
 
 ## License

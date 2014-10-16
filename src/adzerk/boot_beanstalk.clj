@@ -1,12 +1,29 @@
 (ns adzerk.boot-beanstalk
   (:require
-   [boot.pod  :as pod]
-   [boot.core :as boot]))
+   [clojure.java.io :as io]
+   [boot.pod        :as pod]
+   [boot.core       :as boot]))
 
-(def bs-dep '[lein-beanstalk "0.2.7"])
+(def bs-deps '[[lein-beanstalk "0.2.7"]])
+
+(boot/deftask dockerrun
+  "Create Dockerrun.aws.json file.
+
+  The default log directory is /var/log/nginx."
+  
+  [v volumes HOST:CTNR {str str} "The map of host to container directories."
+   l logging PATH      str       "The log directory to map in the container."]
+  
+  (let [tgt (boot/mktgtdir!)]
+    (boot/with-pre-wrap
+      (let [out   (io/file tgt "Dockerrun.aws.json")
+            ->vol (fn [[h c]] {"HostDirectory" h "ContainerDirectory" c})]
+        (spit out (boot/json-generate {"AWSEBDockerrunVersion" "1"
+                                       "Volumes" (mapv ->vol volumes)
+                                       "Logging" (or logging "/var/log/nginx")}))))))
 
 (boot/deftask beanstalk
-  "Deploy war file to elastic beanstalk."
+  "AWS Elastic Beanstalk environment management."
 
   [f file PATH          str  "The path to the deployable artifact."
    A access-key KEY     str  "The AWS API access key."
@@ -25,7 +42,7 @@
   (if-not (or clean deploy info terminate list-stacks)
     (beanstalk :help true)
     (let [p (-> (boot/get-env)
-              (update-in [:dependencies] conj bs-dep)
+              (update-in [:dependencies] into bs-deps)
               pod/make-pod
               future)]
       (boot/with-pre-wrap
