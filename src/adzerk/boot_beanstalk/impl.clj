@@ -118,22 +118,23 @@
   "Deploy war file to elastic beanstalk."
   [{:keys [name version description file env
            clean deploy info terminate list-stacks
-           access-key secret-key s3-bucket aws-region stack-name]
+           access-key secret-key bucket aws-region stack-name
+           beanstalk-envs]
     :as opts}]
   (let [project {:name        name
                  :version     version
                  :description description
                  :war-path    file
                  :aws         {:access-key access-key
-                               :secret-key secret-key}}
+                               :secret-key secret-key
+                               :beanstalk  {:environments beanstalk-envs}}}
         project (if-not stack-name project
                   (update-in project [:aws :beanstalk] assoc :stack-name stack-name))
         project (if-not aws-region project
                   (update-in project [:aws :beanstalk] assoc :region aws-region))
-        project (if-not s3-bucket project
-                  (update-in project [:aws :beanstalk] assoc :s3-bucket s3-bucket))]
-    (assert (or (not (or deploy terminate)) env)
-      "You must specify an environment.")
+        project (if-not bucket project
+                  (update-in project [:aws :beanstalk] assoc :s3-bucket bucket))]
+    (assert (or (not (or deploy terminate)) env) "You must specify an environment.")
     (cond
       clean       (do-clean project)
       deploy      (do-deploy project env)
