@@ -27,12 +27,16 @@ file to run in Tomcat or a docker image):
 (require '[adzerk.boot-beanstalk :refer [beanstalk dockerrun]])
 
 (task-options!
-  web       [:serve       'my-application.core/handler]
-  beanstalk [:name        "my-application"
-             :version     "0.1.0-SNAPSHOT"
-             :description "My awesome application"
-             :access-key  (System/getenv "AWS_ACCESS_KEY")
-             :secret-key  (System/getenv "AWS_SECRET_KEY")])
+  web       [:serve          'my-application.core/handler]
+  beanstalk [:name           "my-application"
+             :version        "0.1.0-SNAPSHOT"
+             :description    "My awesome application"
+             :access-key     (System/getenv "AWS_ACCESS_KEY")
+             :secret-key     (System/getenv "AWS_SECRET_KEY")
+             :beanstalk-envs [{;; name must be unique in AWS account
+                               :name "my-application-dev"
+                               ;; http://<cname-prefix>.elasticbeanstalk.com
+                               :cname-prefix "my-application-dev"}]])
   
 (deftask build-tomcat
   "Build my application uberwar file."
@@ -79,7 +83,7 @@ $ boot build-tomcat
 and create or update Elastic Beanstalk environment:
 
 ```
-$ boot deploy-tomcat beanstalk -f target/project.war -de development
+$ boot deploy-tomcat beanstalk -f target/project.war -de my-application-dev
 ```
 
 #### Docker
@@ -98,7 +102,7 @@ $ boot build-docker
 and create or update Elastic Beanstalk environment:
 
 ```
-$ boot deploy-docker beanstalk -f target/project.zip -de development
+$ boot deploy-docker beanstalk -f target/project.zip -de my-application-dev
 ```
 
 ## License
