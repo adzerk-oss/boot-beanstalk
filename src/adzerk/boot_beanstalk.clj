@@ -14,13 +14,14 @@
   [v volumes HOST:CTNR {str str} "The map of host to container directories."
    l logging PATH      str       "The log directory to map in the container."]
   
-  (let [tgt (boot/mktgtdir!)]
-    (boot/with-pre-wrap
+  (let [tgt (boot/temp-dir!)]
+    (boot/with-pre-wrap fileset
       (let [out   (io/file tgt "Dockerrun.aws.json")
             ->vol (fn [[h c]] {"HostDirectory" h "ContainerDirectory" c})]
         (spit out (boot/json-generate {"AWSEBDockerrunVersion" "1"
                                        "Volumes" (mapv ->vol volumes)
-                                       "Logging" (or logging "/var/log/nginx")}))))))
+                                       "Logging" (or logging "/var/log/nginx")}))
+        (-> fileset (boot/add-resource tgt) boot/commit!)))))
 
 (boot/deftask beanstalk
   "AWS Elastic Beanstalk environment management."
@@ -45,7 +46,7 @@
   (if-not (or clean deploy info terminate list-stacks)
     (beanstalk :help true)
     (let [p (-> (boot/get-env)
-              (update-in [:dependencies] into bs-deps)
+              (update-in [:dependencies] (fnil into []) bs-deps)
               pod/make-pod
               future)]
       (boot/with-pre-wrap
