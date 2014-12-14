@@ -49,6 +49,7 @@
               (update-in [:dependencies] (fnil into []) bs-deps)
               pod/make-pod
               future)]
-      (boot/with-pre-wrap
-        (pod/call-in @p
-          `(adzerk.boot-beanstalk.impl/beanstalk ~*opts*))))))
+      (boot/with-pre-wrap fileset
+        (pod/with-call-in @p
+          (adzerk.boot-beanstalk.impl/beanstalk ~*opts*))
+        fileset))))

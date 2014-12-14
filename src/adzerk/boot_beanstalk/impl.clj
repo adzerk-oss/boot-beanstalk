@@ -3,8 +3,6 @@
    [clojure.java.io         :as io]
    [clojure.string          :as str]
    [clojure.set             :as set]
-   [boot.pod                :as pod]
-   [boot.util               :as util]
    [leiningen.beanstalk.aws :as aws]))
 
 (defn default-environments
