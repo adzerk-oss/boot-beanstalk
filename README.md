@@ -27,8 +27,8 @@ file to run in Tomcat or a docker image):
 (require '[adzerk.boot-beanstalk :refer [beanstalk dockerrun]])
 
 (task-options!
-  web       [:serve          'my-application.core/handler]
-  beanstalk [:name           "my-application"
+  web       {:serve          'my-application.core/handler}
+  beanstalk {:name           "my-application"
              :version        "0.1.0-SNAPSHOT"
              :description    "My awesome application"
              :access-key     (System/getenv "AWS_ACCESS_KEY")
@@ -36,7 +36,7 @@ file to run in Tomcat or a docker image):
              :beanstalk-envs [{;; name must be unique in AWS account
                                :name "my-application-dev"
                                ;; http://<cname-prefix>.elasticbeanstalk.com
-                               :cname-prefix "my-application-dev"}]])
+                               :cname-prefix "my-application-dev"}]})
   
 (deftask build-tomcat
   "Build my application uberwar file."
@@ -52,14 +52,14 @@ file to run in Tomcat or a docker image):
   "Deploy application war file to AWS EB environment."
   []
   (task-options!
-    beanstalk [:stack-name "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7"])
+    beanstalk {:stack-name "64bit Amazon Linux 2014.03 v1.0.7 running Tomcat 7 Java 7"})
   identity)
   
 (deftask deploy-docker
   "Deploy application docker zip file to AWS EB environment."
   []
   (task-options!
-    beanstalk [:stack-name "64bit Amazon Linux 2014.09 v1.0.9 running Docker 1.2.0"])
+    beanstalk {:stack-name "64bit Amazon Linux 2014.09 v1.0.9 running Docker 1.2.0"})
   identity)
 ```
 
