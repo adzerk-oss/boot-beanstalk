@@ -19,8 +19,8 @@ file to run in Tomcat or a docker image):
 
 ```clojure
 (set-env!
-  :tgt-path     "target"
-  :src-paths    #{"src"}
+  :target-path   "target"
+  :source-paths  #{"src"}
   :dependencies '[[org.clojure/clojure "1.6.0"]
                   [adzerk/boot-beanstalk "X.Y.Z"]])
 
@@ -41,7 +41,7 @@ file to run in Tomcat or a docker image):
 (deftask build-tomcat
   "Build my application uberwar file."
   []
-  (comp (add-src) (web) (uber) (war)))
+  (comp (web) (uber) (war)))
 
 (deftask build-docker
   "Build my application docker zip file."
