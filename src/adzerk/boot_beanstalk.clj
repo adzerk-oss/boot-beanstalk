@@ -33,7 +33,7 @@
    D description DESC   str  "The application description."
    v version VER        str  "The application version."
    a aws-region REGION  str  "The AWS region where app is deployed."
-   b beanstalk-envs CLJ any  "The edn map of beanstalk environments."
+   b beanstalk-envs CLJ edn  "The edn map of beanstalk environments."
    B bucket BUCKET      str  "The S3 bucket where app is uploaded."
    e env NAME           str  "The (optional) environment name."
    s stack-name STACK   str  "The (optional) beanstalk solution stack name."
