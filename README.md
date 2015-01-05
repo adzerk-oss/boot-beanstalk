@@ -20,7 +20,7 @@ file to run in Tomcat or a docker image):
 ```clojure
 (set-env!
   :target-path   "target"
-  :source-paths  #{"src"}
+  :resource-paths  #{"src"}
   :dependencies '[[org.clojure/clojure "1.6.0"]
                   [adzerk/boot-beanstalk "X.Y.Z"]])
 
