@@ -4,7 +4,7 @@
    [boot.pod        :as pod]
    [boot.core       :as boot]))
 
-(def bs-deps '[[lein-beanstalk "0.2.7"]])
+(def bs-deps '[[adzerk/lein-beanstalk "0.2.8"]])
 
 (boot/deftask dockerrun
   "Create Dockerrun.aws.json file.
