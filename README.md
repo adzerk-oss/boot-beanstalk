@@ -83,7 +83,7 @@ $ boot build-tomcat
 and create or update Elastic Beanstalk environment:
 
 ```
-$ boot deploy-tomcat beanstalk -f target/project.war -de my-application-dev
+$ boot deploy-tomcat beanstalk -f project.war -de my-application-dev
 ```
 
 #### Docker
@@ -102,12 +102,12 @@ $ boot build-docker
 and create or update Elastic Beanstalk environment:
 
 ```
-$ boot deploy-docker beanstalk -f target/project.zip -de my-application-dev
+$ boot deploy-docker beanstalk -f project.zip -de my-application-dev
 ```
 
 ## License
 
-Copyright © 2014 Adzerk
+Copyright © 2015 Adzerk
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
