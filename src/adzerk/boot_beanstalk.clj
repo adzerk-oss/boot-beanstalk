@@ -26,7 +26,7 @@
 (boot/deftask beanstalk
   "AWS Elastic Beanstalk environment management."
 
-  [f file PATH          str  "The path to the deployable artifact."
+  [f file PATH          str  "The (optional) name of the deployable artifact in the fileset (defaults to project.war)."
    A access-key KEY     str  "The AWS API access key."
    S secret-key KEY     str  "The AWS API secret key."
    n name NAME          str  "The application name."
@@ -50,6 +50,8 @@
               pod/make-pod
               future)]
       (boot/with-pre-wrap fileset
-        (pod/with-call-in @p
-          (adzerk.boot-beanstalk.impl/beanstalk ~*opts*))
+        (let [[file-path] (boot/by-name [(or file "project.war")] (boot/output-files fileset))
+              file (.getAbsolutePath (boot/tmp-file file-path))]
+          (pod/with-call-in @p
+            (adzerk.boot-beanstalk.impl/beanstalk ~(assoc *opts* :file file))))
         fileset))))
