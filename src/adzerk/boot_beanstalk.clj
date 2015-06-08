@@ -2,7 +2,9 @@
   (:require
    [clojure.java.io :as io]
    [boot.pod        :as pod]
-   [boot.core       :as boot]))
+   [boot.core       :as boot]
+   [boot.util       :as util]
+   [boot.file       :as file]))
 
 (def bs-deps '[[adzerk/lein-beanstalk "0.2.8"]])
 
@@ -55,3 +57,28 @@
           (pod/with-call-in @p
             (adzerk.boot-beanstalk.impl/beanstalk ~(assoc *opts* :file file))))
         fileset))))
+
+(boot/deftask eb-war
+  "Create war file for web deployment on elastic beanstalk."
+
+  [f file PATH str "The target war file name."]
+
+  (let [tgt (boot/tmp-dir!)]
+    (boot/with-pre-wrap fileset
+      (boot/empty-dir! tgt)
+      (let [warname (or file "project.war")
+            warfile (io/file tgt warname)
+            inf?    #{"META-INF" "WEB-INF"}]
+        (let [->war   #(let [r    (boot/tmp-path %)
+                             r'   (file/split-path r)
+                             path (cond
+                                    (.endsWith r ".jar") ["WEB-INF" "lib" (last r')]
+                                    (#{"cron.yaml" ".ebextensions"} (first r')) r'
+                                    :else (into ["WEB-INF" "classes"] r'))]
+                         (if (inf? (first r')) r (.getPath (apply io/file path))))
+              entries (boot/output-files fileset)
+              index   (mapv (juxt ->war #(.getPath (boot/tmp-file %))) entries)]
+          (util/info "Writing %s...\n" (.getName warfile))
+          (pod/with-call-worker
+            (boot.jar/spit-jar! ~(.getPath warfile) ~index {} nil))
+          (-> fileset (boot/add-resource tgt) boot/commit!))))))
