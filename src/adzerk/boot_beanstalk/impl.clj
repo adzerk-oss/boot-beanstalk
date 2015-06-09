@@ -1,9 +1,11 @@
 (ns adzerk.boot-beanstalk.impl
   (:require
+   [boot.util               :as util]
    [clojure.java.io         :as io]
    [clojure.string          :as str]
    [clojure.set             :as set]
-   [leiningen.beanstalk.aws :as aws]))
+   [leiningen.beanstalk.aws :as aws])
+  (:import org.stringtemplate.v4.ST))
 
 (defn default-environments
   [project]
@@ -139,3 +141,9 @@
       info        (apply do-info project (when env [env]))
       terminate   (do-terminate project env)
       list-stacks (do-list-stacks project))))
+
+(defn render-template
+  [^String template ^String path m]
+  (.render ^ST (reduce-kv #(.add ^ST %1 %2 %3) (ST. template \$ \$) m)))
+
+;$foo$
