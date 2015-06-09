@@ -103,9 +103,9 @@
 
    And this task used like this:
 
-     (template :paths [\"foo/bar/txt\"] {\"name\" \"Barney\"})
+     (template :paths [\"foo/bar.txt\"] {\"name\" \"Barney\"})
 
-   target/foo/bar.txt will appear in the target directory with this content:
+   foo/bar.txt will appear in the target directory with this content:
 
        My name is Barney"
 
