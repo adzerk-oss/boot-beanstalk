@@ -5,7 +5,7 @@
 
 (require '[adzerk.bootlaces :refer :all])
 
-(def +version+ "0.6.0")
+(def +version+ "0.6.1")
 (bootlaces! +version+)
 
 (task-options!
