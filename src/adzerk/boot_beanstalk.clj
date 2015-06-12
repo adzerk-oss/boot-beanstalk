@@ -124,3 +124,26 @@
               (spit subf (pod/with-call-in p (adzerk.boot-beanstalk.impl/render-template ~txt ~path ~subs))))
             (-> fs (boot/rm files) (boot/add-resource tgt) boot/commit!))
         fs))))
+
+(boot/deftask add-cron
+  "Adds a cron.yaml file to the root of a war file."
+  [w war-file NAME str "The name of the war file to add to."]
+  (let [workdir (boot/tmp-dir!)]
+    (boot/with-pre-wrap fs
+      (boot/empty-dir! workdir)
+      (let [war-name (or war-file "project.war")
+            [war]  (boot/by-name [war-name] (boot/output-files fs))
+            [yaml] (boot/by-name ["cron.yaml"] (boot/input-files fs))]
+        (if (and war yaml)
+          (let [file (boot/tmp-file war)
+                new-file (io/file workdir war-name)]
+            (io/copy file new-file)
+            (io/copy (boot/tmp-file yaml) (io/file workdir "cron.yaml"))
+            (binding [util/*sh-dir* (.getAbsolutePath workdir)]
+              (util/dosh "zip" "-u" (.getAbsolutePath new-file) "cron.yaml"))
+            (-> fs
+                (boot/rm [war])
+                (boot/add-resource workdir)
+                boot/commit!))
+          (util/warn "No war named %s found in fileset\n" war-name))
+        fs))))
