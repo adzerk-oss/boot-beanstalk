@@ -1,11 +1,11 @@
 (set-env!
   :src-paths    #{"src"}
-  :dependencies '[[adzerk/bootlaces      "0.1.8"     :scope "test"]
-                  [adzerk/lein-beanstalk "0.2.8"     :scope "test"]])
+  :dependencies '[[adzerk/bootlaces      "0.1.11" :scope "test"]
+                  [adzerk/lein-beanstalk "0.2.8"  :scope "test"]])
 
 (require '[adzerk.bootlaces :refer :all])
 
-(def +version+ "0.6.1")
+(def +version+ "0.7.0")
 (bootlaces! +version+)
 
 (task-options!
