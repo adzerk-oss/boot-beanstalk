@@ -8,9 +8,14 @@
 
 (defn- make-pod
   []
-  (-> {:dependencies '[[adzerk/lein-beanstalk "0.2.8"]]}
-      pod/make-pod
-      future))
+  (let [filtered-env
+        (update (boot/get-env)
+                :dependencies
+                #(filterv (fn [[dep & _]] (= dep 'adzerk/boot-beanstalk)) %))]
+    (-> filtered-env
+        (update :dependencies conj '[adzerk/lein-beanstalk "0.2.8"])
+        pod/make-pod
+        future)))
 
 (def ^:private pod (delay @(make-pod)))
 
