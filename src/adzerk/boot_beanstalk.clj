@@ -6,13 +6,9 @@
    [boot.util       :as util]
    [boot.file       :as file]))
 
-(def ^:private pod-deps
-  '[[adzerk/lein-beanstalk "0.2.8"]])
-
 (defn- make-pod
   []
-  (-> (boot/get-env)
-      (update-in [:dependencies] (fnil into []) pod-deps)
+  (-> {:dependencies '[[adzerk/lein-beanstalk "0.2.8"]]}
       pod/make-pod
       future))
 
