@@ -61,7 +61,8 @@
     (let [p @pod]
       (boot/with-pre-wrap fileset
         (let [[file-path] (boot/by-name [(or file "project.war")] (boot/output-files fileset))
-              file (.getAbsolutePath (boot/tmp-file file-path))]
+              file (when file-path
+                     (.getAbsolutePath (boot/tmp-file file-path)))]
           (pod/with-call-in p
             (adzerk.boot-beanstalk.impl/beanstalk ~(assoc *opts* :file file))))
         fileset))))
