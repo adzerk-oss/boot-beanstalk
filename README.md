@@ -112,6 +112,6 @@ Copyright © 2015 Adzerk
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
-[1]: http://clojars.org/adzerk/boot-beanstalk/latest-version.svg
+[1]: http://clojars.org/adzerk/boot-beanstalk/latest-version.svg?1
 [2]: http://clojars.org/adzerk/boot-beanstalk
 [3]: https://docs.docker.com/reference/builder/
